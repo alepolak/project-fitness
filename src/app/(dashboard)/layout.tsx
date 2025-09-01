@@ -11,9 +11,16 @@ export default function DashboardLayout({
 }) {
   // Initialize storage service on mount
   useEffect(() => {
-    storageService.initialize().catch((error) => {
-      console.error("Failed to initialize storage:", error);
-    });
+    const initializeStorage = async () => {
+      try {
+        await storageService.initialize();
+        console.log("Storage initialized successfully");
+      } catch (error) {
+        console.error("Failed to initialize storage:", error);
+      }
+    };
+
+    initializeStorage();
   }, []);
 
   return (

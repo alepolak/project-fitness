@@ -23,6 +23,15 @@ export class DataInitService {
     alreadyInitialized: boolean;
   }> {
     try {
+      // Ensure storage is initialized first
+      await storageService.initialize();
+
+      // Check if database is ready
+      if (!storageService.isReady()) {
+        console.warn("Database not ready for initialization");
+        throw new Error("Database not ready");
+      }
+
       // Check if we've already initialized
       const existingExercises = await exerciseRepository.count();
       const existingGlossary = await storageService.count("glossary");
@@ -197,6 +206,19 @@ export class DataInitService {
     isInitialized: boolean;
   }> {
     try {
+      // Ensure storage is initialized first
+      await storageService.initialize();
+
+      // Check if database is ready
+      if (!storageService.isReady()) {
+        console.warn("Database not ready, returning safe defaults");
+        return {
+          exerciseCount: 0,
+          glossaryCount: 0,
+          isInitialized: false,
+        };
+      }
+
       const exerciseCount = await exerciseRepository.count();
       const glossaryCount = await storageService.count("glossary");
 
@@ -207,6 +229,7 @@ export class DataInitService {
       };
     } catch (error) {
       console.error("Failed to get initialization status:", error);
+      // Return safe defaults if storage isn't ready
       return {
         exerciseCount: 0,
         glossaryCount: 0,

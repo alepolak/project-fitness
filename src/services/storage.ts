@@ -10,6 +10,14 @@ export class StorageService {
   private db: IDBDatabase | null = null;
   private readonly dbName = "FitnessTracker";
   private readonly dbVersion = 1;
+  private initPromise: Promise<void> | null = null;
+
+  /**
+   * Check if database is ready for operations
+   */
+  isReady(): boolean {
+    return this.db !== null && this.db.objectStoreNames.length > 0;
+  }
 
   /**
    * Initialize the IndexedDB connection
@@ -17,16 +25,24 @@ export class StorageService {
   async initialize(): Promise<void> {
     if (this.db) return;
 
-    return new Promise((resolve, reject) => {
+    // If initialization is already in progress, return the existing promise
+    if (this.initPromise) {
+      return this.initPromise;
+    }
+
+    this.initPromise = new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.dbVersion);
 
       request.onerror = () => {
+        this.initPromise = null;
         reject(new Error("Failed to open IndexedDB"));
       };
 
       request.onsuccess = () => {
         this.db = request.result;
-        resolve();
+        this.initPromise = null;
+        // Small delay to ensure database is fully ready
+        setTimeout(() => resolve(), 10);
       };
 
       request.onupgradeneeded = (event) => {
@@ -77,6 +93,16 @@ export class StorageService {
           planStore.createIndex("title", "title", { unique: false });
           planStore.createIndex("difficulty_level", "difficulty_level", { unique: false });
           planStore.createIndex("is_template", "is_template", { unique: false });
+          planStore.createIndex("created_at", "created_at", { unique: false });
+          planStore.createIndex("updated_at", "updated_at", { unique: false });
+        }
+
+        // Completed sessions store for tracking progress
+        if (!db.objectStoreNames.contains("completed_sessions")) {
+          const completedStore = db.createObjectStore("completed_sessions", { keyPath: "id" });
+          completedStore.createIndex("session_id", "session_id", { unique: false });
+          completedStore.createIndex("plan_id", "plan_id", { unique: false });
+          completedStore.createIndex("completion_date", "completion_date", { unique: false });
         }
 
         // Glossary store
@@ -99,22 +125,6 @@ export class StorageService {
           mediaStore.createIndex("mimeType", "mimeType", { unique: false });
           mediaStore.createIndex("created_at", "created_at", { unique: false });
         }
-
-        if (!db.objectStoreNames.contains("plans")) {
-          const plansStore = db.createObjectStore("plans", { keyPath: "id" });
-          plansStore.createIndex("title", "title", { unique: false });
-          plansStore.createIndex("difficulty_level", "difficulty_level", { unique: false });
-          plansStore.createIndex("is_template", "is_template", { unique: false });
-          plansStore.createIndex("created_at", "created_at", { unique: false });
-          plansStore.createIndex("updated_at", "updated_at", { unique: false });
-        }
-
-        if (!db.objectStoreNames.contains("completed_sessions")) {
-          const completedStore = db.createObjectStore("completed_sessions", { keyPath: "id" });
-          completedStore.createIndex("session_id", "session_id", { unique: false });
-          completedStore.createIndex("plan_id", "plan_id", { unique: false });
-          completedStore.createIndex("completion_date", "completion_date", { unique: false });
-        }
       };
     });
   }
@@ -123,8 +133,14 @@ export class StorageService {
    * Save data to a specific store
    */
   async save<T extends StorageData>(storeName: string, data: T): Promise<void> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
     }
 
     return new Promise((resolve, reject) => {
@@ -154,22 +170,39 @@ export class StorageService {
    * Get data by ID from a specific store
    */
   async get<T>(storeName: string, id: string): Promise<T | null> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
+    }
+
+    // Check if the store exists
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      console.warn(`Object store '${storeName}' does not exist yet`);
+      return null;
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], "readonly");
-      const store = transaction.objectStore(storeName);
-      const request = store.get(id);
+      try {
+        const transaction = this.db!.transaction([storeName], "readonly");
+        const store = transaction.objectStore(storeName);
+        const request = store.get(id);
 
-      request.onerror = () => {
-        reject(new Error(`Failed to get data from ${storeName}`));
-      };
+        request.onerror = () => {
+          reject(new Error(`Failed to get data from ${storeName}`));
+        };
 
-      request.onsuccess = () => {
-        resolve(request.result || null);
-      };
+        request.onsuccess = () => {
+          resolve(request.result || null);
+        };
+      } catch (error) {
+        console.warn(`Error accessing store ${storeName}, returning null:`, error);
+        resolve(null);
+      }
     });
   }
 
@@ -184,11 +217,24 @@ export class StorageService {
       range?: IDBKeyRange;
     }
   ): Promise<T[]> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
+    }
+
+    // Check if the store exists
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      console.warn(`Object store '${storeName}' does not exist yet, returning empty array`);
+      return [];
     }
 
     return new Promise((resolve, reject) => {
+      try {
       const transaction = this.db!.transaction([storeName], "readonly");
       const store = transaction.objectStore(storeName);
 
@@ -214,6 +260,10 @@ export class StorageService {
       request.onsuccess = () => {
         resolve(request.result || []);
       };
+      } catch (error) {
+        console.warn(`Error accessing store ${storeName}, returning empty array:`, error);
+        resolve([]);
+      }
     });
   }
 
@@ -221,22 +271,39 @@ export class StorageService {
    * Delete data by ID from a specific store
    */
   async delete(storeName: string, id: string): Promise<void> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
+    }
+
+    // Check if the store exists
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      console.warn(`Object store '${storeName}' does not exist yet, cannot delete`);
+      return;
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], "readwrite");
-      const store = transaction.objectStore(storeName);
-      const request = store.delete(id);
+      try {
+        const transaction = this.db!.transaction([storeName], "readwrite");
+        const store = transaction.objectStore(storeName);
+        const request = store.delete(id);
 
-      request.onerror = () => {
-        reject(new Error(`Failed to delete data from ${storeName}`));
-      };
+        request.onerror = () => {
+          reject(new Error(`Failed to delete data from ${storeName}`));
+        };
 
-      request.onsuccess = () => {
+        request.onsuccess = () => {
+          resolve();
+        };
+      } catch (error) {
+        console.warn(`Error accessing store ${storeName}, cannot delete:`, error);
         resolve();
-      };
+      }
     });
   }
 
@@ -244,22 +311,39 @@ export class StorageService {
    * Clear all data from a specific store
    */
   async clear(storeName: string): Promise<void> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
+    }
+
+    // Check if the store exists
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      console.warn(`Object store '${storeName}' does not exist yet, cannot clear`);
+      return;
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], "readwrite");
-      const store = transaction.objectStore(storeName);
-      const request = store.clear();
+      try {
+        const transaction = this.db!.transaction([storeName], "readwrite");
+        const store = transaction.objectStore(storeName);
+        const request = store.clear();
 
-      request.onerror = () => {
-        reject(new Error(`Failed to clear data from ${storeName}`));
-      };
+        request.onerror = () => {
+          reject(new Error(`Failed to clear data from ${storeName}`));
+        };
 
-      request.onsuccess = () => {
+        request.onsuccess = () => {
+          resolve();
+        };
+      } catch (error) {
+        console.warn(`Error accessing store ${storeName}, cannot clear:`, error);
         resolve();
-      };
+      }
     });
   }
 
@@ -270,30 +354,47 @@ export class StorageService {
     storeName: string,
     items: T[]
   ): Promise<void> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
+    }
+
+    // Check if the store exists
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      console.warn(`Object store '${storeName}' does not exist yet, cannot save batch`);
+      return;
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], "readwrite");
-      const store = transaction.objectStore(storeName);
-      
-      transaction.onerror = () => {
-        reject(new Error(`Failed to save batch to ${storeName}`));
-      };
+      try {
+        const transaction = this.db!.transaction([storeName], "readwrite");
+        const store = transaction.objectStore(storeName);
 
-      transaction.oncomplete = () => {
-        resolve();
-      };
-
-      items.forEach((item) => {
-        const dataWithMeta = {
-          ...item,
-          timestamp: item.timestamp || Date.now(),
-          version: item.version || 1,
+        transaction.onerror = () => {
+          reject(new Error(`Failed to save batch to ${storeName}`));
         };
-        store.put(dataWithMeta);
-      });
+
+        transaction.oncomplete = () => {
+          resolve();
+        };
+
+        items.forEach((item) => {
+          const dataWithMeta = {
+            ...item,
+            timestamp: item.timestamp || Date.now(),
+            version: item.version || 1,
+          };
+          store.put(dataWithMeta);
+        });
+      } catch (error) {
+        console.warn(`Error accessing store ${storeName}, cannot save batch:`, error);
+        resolve();
+      }
     });
   }
 
@@ -301,37 +402,54 @@ export class StorageService {
    * Get multiple items by IDs
    */
   async getMultiple<T>(storeName: string, ids: string[]): Promise<T[]> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
+    }
+
+    // Check if the store exists
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      console.warn(`Object store '${storeName}' does not exist yet, returning empty array`);
+      return [];
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], "readonly");
-      const store = transaction.objectStore(storeName);
-      const results: T[] = [];
-      let completed = 0;
+      try {
+        const transaction = this.db!.transaction([storeName], "readonly");
+        const store = transaction.objectStore(storeName);
+        const results: T[] = [];
+        let completed = 0;
 
-      transaction.onerror = () => {
-        reject(new Error(`Failed to get items from ${storeName}`));
-      };
-
-      if (ids.length === 0) {
-        resolve([]);
-        return;
-      }
-
-      ids.forEach((id) => {
-        const request = store.get(id);
-        request.onsuccess = () => {
-          if (request.result) {
-            results.push(request.result);
-          }
-          completed++;
-          if (completed === ids.length) {
-            resolve(results);
-          }
+        transaction.onerror = () => {
+          reject(new Error(`Failed to get items from ${storeName}`));
         };
-      });
+
+        if (ids.length === 0) {
+          resolve([]);
+          return;
+        }
+
+        ids.forEach((id) => {
+          const request = store.get(id);
+          request.onsuccess = () => {
+            if (request.result) {
+              results.push(request.result);
+            }
+            completed++;
+            if (completed === ids.length) {
+              resolve(results);
+            }
+          };
+        });
+      } catch (error) {
+        console.warn(`Error accessing store ${storeName}, returning empty array:`, error);
+        resolve([]);
+      }
     });
   }
 
@@ -339,22 +457,39 @@ export class StorageService {
    * Count items in a store
    */
   async count(storeName: string): Promise<number> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
+    }
+
+    // Check if the store exists
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      console.warn(`Object store '${storeName}' does not exist yet, returning 0`);
+      return 0;
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], "readonly");
-      const store = transaction.objectStore(storeName);
-      const request = store.count();
+      try {
+        const transaction = this.db!.transaction([storeName], "readonly");
+        const store = transaction.objectStore(storeName);
+        const request = store.count();
 
-      request.onerror = () => {
-        reject(new Error(`Failed to count items in ${storeName}`));
-      };
+        request.onerror = () => {
+          reject(new Error(`Failed to count items in ${storeName}`));
+        };
 
-      request.onsuccess = () => {
-        resolve(request.result);
-      };
+        request.onsuccess = () => {
+          resolve(request.result);
+        };
+      } catch (error) {
+        console.warn(`Error accessing store ${storeName}, returning 0:`, error);
+        resolve(0);
+      }
     });
   }
 
@@ -429,22 +564,39 @@ export class StorageService {
    * Get all items from a store
    */
   async getAll<T>(storeName: string): Promise<T[]> {
+    // Ensure database is initialized before proceeding
     if (!this.db) {
-      throw new Error("Database not initialized");
+      await this.initialize();
+    }
+
+    // Double-check database is ready
+    if (!this.db) {
+      throw new Error("Database not initialized after attempt");
+    }
+
+    // Check if the store exists
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      console.warn(`Object store '${storeName}' does not exist yet, returning empty array`);
+      return [];
     }
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([storeName], "readonly");
-      const store = transaction.objectStore(storeName);
-      const request = store.getAll();
+      try {
+        const transaction = this.db!.transaction([storeName], "readonly");
+        const store = transaction.objectStore(storeName);
+        const request = store.getAll();
 
-      request.onerror = () => {
-        reject(new Error(`Failed to get all items from ${storeName}`));
-      };
+        request.onerror = () => {
+          reject(new Error(`Failed to get all items from ${storeName}`));
+        };
 
-      request.onsuccess = () => {
-        resolve(request.result || []);
-      };
+        request.onsuccess = () => {
+          resolve(request.result || []);
+        };
+      } catch (error) {
+        console.warn(`Error accessing store ${storeName}, returning empty array:`, error);
+        resolve([]);
+      }
     });
   }
 

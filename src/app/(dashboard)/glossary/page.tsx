@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,41 +26,57 @@ export default function GlossaryPage() {
     isLoading,
     error,
     updateFilters,
+    search,
   } = useGlossarySearch();
+
+  // Use ref to avoid circular dependencies
+  const searchRef = useRef(search);
+  searchRef.current = search;
 
   const initializeData = useCallback(async () => {
     setIsInitializing(true);
     try {
       await DataInitService.ensureStorageInitialized();
       const result = await DataInitService.initializeAppData();
-      
+
       if (!result.alreadyInitialized) {
         console.log(`Initialized ${result.exercisesAdded} exercises and ${result.glossaryAdded} glossary terms`);
       }
-      
+
       // Refresh status and load terms
       const status = await DataInitService.getInitializationStatus();
       setInitStatus(status);
-      updateFilters({ query: "" });
+
+      // Use a timeout to avoid immediate re-render issues
+      setTimeout(() => {
+        searchRef.current({ query: "", categories: [], difficultyLevels: [] });
+      }, 0);
     } catch (error) {
       console.error("Failed to initialize data:", error);
     } finally {
       setIsInitializing(false);
     }
-  }, [updateFilters]);
+  }, []); // Remove updateFilters dependency to prevent circular dependency
 
   // Check initialization status on mount
   useEffect(() => {
+    let isMounted = true;
+
     const checkStatus = async () => {
       try {
         const status = await DataInitService.getInitializationStatus();
+
+        if (!isMounted) return;
+
         setInitStatus(status);
-        
+
         if (!status.isInitialized) {
           await initializeData();
         } else {
-          // Load some terms to display
-          updateFilters({ query: "" });
+          // Load some terms to display - only call if component is still mounted
+          if (isMounted) {
+            searchRef.current({ query: "", categories: [], difficultyLevels: [] });
+          }
         }
       } catch (error) {
         console.error("Failed to check initialization status:", error);
@@ -68,7 +84,11 @@ export default function GlossaryPage() {
     };
 
     checkStatus();
-  }, [updateFilters, initializeData]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []); // No dependencies needed since we use ref
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);

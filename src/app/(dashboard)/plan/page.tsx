@@ -11,6 +11,7 @@ import { Calendar, Plus, BookOpen, Search, Filter, Play, MoreVertical, Copy, Tra
 import { planRepository } from "@/repositories";
 import { PlanService } from "@/services/planService";
 import { DataInitService } from "@/services/dataInitService";
+import { storageService } from "@/services/storage";
 
 import type { ProgramPlan } from "@/types";
 import styles from "./PlanPage.module.css";
@@ -29,6 +30,9 @@ export default function PlanPage() {
   const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
+      // Ensure storage is initialized first
+      await storageService.initialize();
+
       // Initialize data if needed
       await DataInitService.ensureStorageInitialized();
       const initStatus = await DataInitService.getInitializationStatus();
