@@ -1,0 +1,412 @@
+/* Rest Timer Overlay */
+.restTimerOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-4);
+}
+
+/* Rest Timer Card */
+.restTimer {
+  width: 100%;
+  max-width: 400px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease-out;
+}
+
+.restTimer.active {
+  border-color: var(--primary);
+}
+
+.restTimer.paused {
+  border-color: var(--warning, var(--muted-foreground));
+}
+
+.restTimer.completed {
+  border-color: var(--success, var(--primary));
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Timer Content */
+.timerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-6);
+  text-align: center;
+}
+
+/* Timer Header */
+.timerHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+  width: 100%;
+}
+
+.timerTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.timerIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+}
+
+.contextInfo {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+/* Timer Display */
+.timerDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+  position: relative;
+  z-index: 2;
+}
+
+.timeRemaining {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.initialTime {
+  font-size: 1rem;
+  color: var(--muted-foreground);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Progress Ring */
+.progressRing {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: var(--spacing-4) 0;
+}
+
+.progressSvg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progressBackground {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 8;
+}
+
+.progressForeground {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.1s ease-out;
+}
+
+.restTimer.completed .progressForeground {
+  stroke: var(--success, var(--primary));
+}
+
+.restTimer.paused .progressForeground {
+  stroke: var(--warning, var(--muted-foreground));
+}
+
+/* Status Icon */
+.statusIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.completedIcon {
+  width: 32px;
+  height: 32px;
+  color: var(--success, var(--primary));
+  animation: bounce 0.5s ease-in-out;
+}
+
+.pausedIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--warning, var(--muted-foreground));
+}
+
+.activeIndicator {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  40%, 43% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  90% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+/* Timer Controls */
+.timerControls {
+  display: flex;
+  gap: var(--spacing-2);
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  min-width: 80px;
+  height: 40px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.skipButton {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  min-width: 100px;
+}
+
+.doneButton {
+  background: var(--success, var(--primary));
+  color: var(--success-foreground, var(--primary-foreground));
+  width: 100%;
+  height: 48px;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.controlIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Extend Options */
+.extendOptions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-3);
+  background: var(--accent);
+  border-radius: var(--radius);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.extendTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent-foreground);
+  text-align: center;
+}
+
+.extendButtons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: var(--spacing-1);
+}
+
+.extendButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  height: 32px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.extendIcon {
+  width: 12px;
+  height: 12px;
+}
+
+/* Timer Tips and Messages */
+.timerTips {
+  padding: var(--spacing-2);
+  background: var(--muted);
+  border-radius: var(--radius);
+  width: 100%;
+}
+
+.timerTips p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+
+.completedMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3);
+  background: var(--success-background, var(--accent));
+  border-radius: var(--radius);
+  width: 100%;
+}
+
+.completedMessageIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--success, var(--primary));
+}
+
+.completedMessage p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--success-foreground, var(--accent-foreground));
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .restTimerOverlay {
+    padding: var(--spacing-2);
+  }
+
+  .timerContent {
+    padding: var(--spacing-4);
+    gap: var(--spacing-3);
+  }
+
+  .timeRemaining {
+    font-size: 2.5rem;
+  }
+
+  .progressRing {
+    width: 160px;
+    height: 160px;
+    margin: var(--spacing-3) 0;
+  }
+
+  .timerControls {
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .controlButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .extendButtons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .timerTitle {
+    font-size: 1.125rem;
+  }
+
+  .initialTime {
+    font-size: 0.875rem;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .restTimerOverlay {
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  .restTimer {
+    background: var(--card);
+    border-color: var(--border);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+  
+  .progressBackground {
+    stroke: var(--muted);
+  }
+  
+  .extendOptions {
+    background: var(--muted);
+    border: 1px solid var(--border);
+  }
+}

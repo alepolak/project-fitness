@@ -98,3 +98,86 @@ export interface WorkoutSummary {
   average_workout_rating: number;
   most_frequent_exercises: Array<{ exercise_id: string; count: number }>;
 }
+
+// Active session management types
+export interface ActiveWorkoutSession {
+  id: string;
+  workoutLog: WorkoutLogEntry;
+  currentExerciseIndex: number;
+  sessionStatus: 'not-started' | 'active' | 'paused' | 'completed' | 'abandoned';
+  startTime: string;
+  pauseTime?: string;
+  pauseDuration: number; // Total paused time in seconds
+  isResting: boolean;
+  restTimeRemaining: number;
+  lastActivity: string; // ISO timestamp
+  created_at: string;
+  updated_at: string;
+  version: number;
+}
+
+export interface WorkoutFilters {
+  exerciseId?: string;
+  dateRange?: { start: Date; end: Date };
+  sessionType?: string;
+  environment?: string;
+  sortBy: 'date' | 'exercise' | 'duration' | 'rating';
+  sortOrder: 'asc' | 'desc';
+  searchQuery?: string;
+}
+
+export interface RestTimerState {
+  isActive: boolean;
+  timeRemaining: number;
+  initialTime: number;
+  exerciseId?: string;
+  setNumber?: number;
+}
+
+export interface SessionProgress {
+  exercisesCompleted: number;
+  totalExercises: number;
+  setsCompleted: number;
+  totalSets: number;
+  elapsedTime: number; // seconds
+  estimatedTimeRemaining: number; // seconds
+}
+
+export interface WorkoutStats {
+  totalVolume: number;
+  averageRpe: number;
+  maxWeight: number;
+  totalReps: number;
+  exerciseCount: number;
+  duration: number; // seconds
+}
+
+export interface ExerciseProgressData {
+  exerciseId: string;
+  exerciseName: string;
+  sessions: Array<{
+    date: string;
+    maxWeight: number;
+    maxReps: number;
+    totalVolume: number;
+    averageRpe: number;
+    setCount: number;
+  }>;
+}
+
+export interface ProgressTrend {
+  trend: 'increasing' | 'decreasing' | 'stable';
+  percentage: number;
+  period: string;
+}
+
+// Notification types for workout events
+export interface WorkoutNotification {
+  id: string;
+  type: 'rest-complete' | 'set-reminder' | 'session-paused' | 'hydration-reminder';
+  title: string;
+  message: string;
+  timestamp: string;
+  exerciseId?: string;
+  setNumber?: number;
+}

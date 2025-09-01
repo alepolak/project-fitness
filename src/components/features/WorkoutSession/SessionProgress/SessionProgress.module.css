@@ -1,0 +1,218 @@
+/* Session Progress Styles */
+.sessionProgress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+/* Progress Bars Section */
+.progressBars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progressLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.progressIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.progressText {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.progressBar {
+  height: 6px;
+  background: var(--muted);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease-in-out;
+  border-radius: 3px;
+}
+
+/* Time Information */
+.timeInfo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-3);
+}
+
+.timeSection {
+  display: flex;
+  justify-content: center;
+}
+
+.timeItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2);
+  background: var(--muted);
+  border-radius: var(--radius);
+  min-width: 0;
+  flex: 1;
+}
+
+.timeIcon {
+  width: 16px;
+  height: 16px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.timeDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.timeLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  line-height: 1;
+}
+
+.timeValue {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+/* Overall Progress */
+.overallProgress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.overallProgressBar {
+  width: 100%;
+  height: 8px;
+  background: var(--muted);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.overallProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--primary-foreground));
+  transition: width 0.3s ease-in-out;
+  border-radius: 4px;
+}
+
+.overallProgressText {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .sessionProgress {
+    gap: var(--spacing-3);
+  }
+
+  .progressBars {
+    gap: var(--spacing-2);
+  }
+
+  .timeInfo {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+  }
+
+  .timeItem {
+    padding: var(--spacing-3);
+  }
+
+  .timeDetails {
+    gap: 1px;
+  }
+
+  .timeLabel {
+    font-size: 0.6875rem;
+  }
+
+  .timeValue {
+    font-size: 0.8125rem;
+  }
+
+  .progressLabel {
+    font-size: 0.8125rem;
+  }
+
+  .progressText {
+    font-size: 0.8125rem;
+  }
+
+  .overallProgressText {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Animation for progress updates */
+@keyframes progressUpdate {
+  0% {
+    transform: scaleX(0.95);
+  }
+  50% {
+    transform: scaleX(1.02);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.progressFill:not(:empty),
+.overallProgressFill:not(:empty) {
+  animation: progressUpdate 0.3s ease-in-out;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .timeItem {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  
+  .progressBar,
+  .overallProgressBar {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+}

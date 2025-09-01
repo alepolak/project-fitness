@@ -1,0 +1,280 @@
+/* Set Logger Styles */
+.setLogger {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background: var(--card);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.setLogger.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Set Header */
+.setHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2);
+}
+
+.setTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.setIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.targets {
+  display: flex;
+  gap: var(--spacing-1);
+  flex-wrap: wrap;
+}
+
+/* Main Inputs */
+.mainInputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.inputLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.fieldIcon {
+  width: 14px;
+  height: 14px;
+  color: var(--primary);
+}
+
+.difference {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin-left: var(--spacing-1);
+}
+
+/* Number Input with Adjust Buttons */
+.numberInput {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.adjustButton {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.adjustIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.numberField {
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Advanced Fields */
+.advancedToggle {
+  align-self: center;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  text-decoration: underline;
+  height: auto;
+  padding: var(--spacing-1) var(--spacing-2);
+}
+
+.advancedFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding-top: var(--spacing-2);
+  border-top: 1px solid var(--border);
+}
+
+/* Complete Button */
+.completeButton {
+  width: 100%;
+  height: 48px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.completeButton:hover:not(:disabled) {
+  background: var(--primary-hover, var(--primary));
+  transform: translateY(-1px);
+}
+
+.completeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.completeIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Loading Spinner */
+.loadingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error Messages */
+.error {
+  font-size: 0.75rem;
+  color: var(--destructive);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .setLogger {
+    padding: var(--spacing-3);
+    gap: var(--spacing-3);
+  }
+
+  .mainInputs {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+
+  .setHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
+
+  .targets {
+    align-self: flex-end;
+  }
+
+  .setTitle {
+    font-size: 1rem;
+  }
+
+  .completeButton {
+    height: 44px;
+    font-size: 1rem;
+  }
+
+  .numberInput {
+    gap: var(--spacing-1);
+  }
+
+  .adjustButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .adjustIcon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .numberField {
+    font-size: 0.875rem;
+  }
+
+  .advancedFields {
+    gap: var(--spacing-2);
+  }
+}
+
+/* Focus States */
+.numberField:focus,
+.setLogger input:focus,
+.setLogger textarea:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+/* Select Component Adjustments */
+.setLogger .select-trigger {
+  height: 40px;
+}
+
+.setLogger .select-content {
+  max-height: 200px;
+}
+
+/* Hover Effects */
+.adjustButton:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent-foreground);
+}
+
+.advancedToggle:hover {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .setLogger {
+    background: var(--card);
+    border-color: var(--primary);
+  }
+  
+  .numberField {
+    background: var(--background);
+    border-color: var(--border);
+  }
+  
+  .adjustButton {
+    background: var(--background);
+    border-color: var(--border);
+  }
+  
+  .adjustButton:hover:not(:disabled) {
+    background: var(--muted);
+    border-color: var(--muted-foreground);
+  }
+}

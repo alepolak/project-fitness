@@ -1,0 +1,477 @@
+/* Cardio Logger Styles */
+.cardioLogger {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.cardioLogger.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Exercise Header */
+.exerciseHeader {
+  background: var(--accent);
+  border: 2px solid var(--accent-foreground);
+}
+
+.exerciseTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 1.25rem;
+  color: var(--accent-foreground);
+}
+
+.exerciseIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+}
+
+.exerciseTargets {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-2);
+}
+
+.targetIcon {
+  width: 14px;
+  height: 14px;
+  margin-right: var(--spacing-1);
+}
+
+/* Progress Card */
+.progressCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.progressBar {
+  height: 6px;
+  background: var(--muted);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--primary);
+  transition: width 0.3s ease-in-out;
+  border-radius: 3px;
+}
+
+.targetReached {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  margin-top: var(--spacing-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--success, var(--primary));
+}
+
+.targetReachedIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Timer Card */
+.timerCard {
+  border: 2px solid var(--border);
+  background: var(--card);
+  transition: border-color 0.2s ease-in-out;
+}
+
+.timerCard.running {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.timerCard.paused {
+  border-color: var(--warning, var(--muted-foreground));
+}
+
+.timerCard.completed {
+  border-color: var(--success, var(--primary));
+}
+
+.timerDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-4);
+}
+
+.currentTime {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.timerStatus {
+  display: flex;
+  justify-content: center;
+}
+
+/* Interval Display */
+.intervalDisplay {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-3);
+}
+
+.intervalIndicator {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius);
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+.intervalIndicator.work {
+  background: var(--destructive-foreground);
+  color: var(--destructive);
+  border-color: var(--destructive);
+}
+
+.intervalIndicator.rest {
+  background: var(--success-background, var(--accent));
+  color: var(--success, var(--primary));
+  border-color: var(--success, var(--primary));
+}
+
+.intervalLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.intervalTime {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  margin-top: var(--spacing-1);
+}
+
+/* Timer Controls */
+.timerControls {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.startButton {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  min-width: 140px;
+  height: 48px;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-width: 100px;
+  height: 40px;
+  font-weight: 600;
+}
+
+.stopButton {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+}
+
+.completeButton {
+  background: var(--success, var(--primary));
+  color: var(--success-foreground, var(--primary-foreground));
+  min-width: 160px;
+  height: 48px;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.controlIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Settings Card */
+.settingsCard {
+  background: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.intervalSettings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.settingToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.toggleInput {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.toggleLabel {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.intervalInputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-3);
+}
+
+.intervalInput {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+/* Metrics Card */
+.metricsCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+}
+
+.metricInput {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.metricInput label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.metricIcon {
+  width: 14px;
+  height: 14px;
+  color: var(--primary);
+}
+
+.notesInput {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.notesInput label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* Segments Card */
+.segmentsCard {
+  background: var(--accent);
+  border: 1px solid var(--accent-foreground);
+}
+
+.segmentsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.segmentItem {
+  padding: var(--spacing-3);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.segmentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2);
+}
+
+.segmentNumber {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.segmentDuration {
+  font-weight: 600;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.segmentMetrics {
+  display: flex;
+  gap: var(--spacing-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-2);
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.segmentNotes {
+  font-size: 0.875rem;
+  color: var(--foreground);
+  font-style: italic;
+  padding: var(--spacing-2);
+  background: var(--muted);
+  border-radius: var(--radius);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cardioLogger {
+    gap: var(--spacing-3);
+  }
+
+  .currentTime {
+    font-size: 2.5rem;
+  }
+
+  .timerControls {
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+
+  .controlButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2);
+  }
+
+  .intervalInputs {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+  }
+
+  .segmentMetrics {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .exerciseTargets {
+    flex-direction: column;
+    gap: var(--spacing-1);
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .currentTime {
+    font-size: 2rem;
+  }
+
+  .intervalTime {
+    font-size: 1.25rem;
+  }
+
+  .startButton,
+  .completeButton {
+    height: 44px;
+    font-size: 1rem;
+  }
+
+  .controlButton {
+    height: 36px;
+    font-size: 0.875rem;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .exerciseTitle {
+    font-size: 1.125rem;
+  }
+
+  .segmentHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-1);
+  }
+}
+
+/* Focus states */
+.cardioLogger input:focus,
+.cardioLogger select:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+/* Hover effects */
+.startButton:hover:not(:disabled),
+.completeButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.controlButton:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent-foreground);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .timerCard {
+    background: var(--card);
+    border-color: var(--border);
+  }
+  
+  .settingsCard,
+  .metricsCard {
+    background: var(--card);
+    border-color: var(--border);
+  }
+  
+  .segmentItem {
+    background: var(--background);
+    border-color: var(--border);
+  }
+  
+  .segmentNotes {
+    background: var(--card);
+  }
+}
