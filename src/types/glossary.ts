@@ -21,6 +21,12 @@ export interface GlossaryItem {
   version: number;
 }
 
+export interface GlossarySearchFilters {
+  query?: string;
+  category?: "exercise" | "nutrition" | "recovery" | "technique" | "equipment";
+  difficulty?: "beginner" | "intermediate" | "advanced";
+}
+
 export interface EducationalArticle {
   id: string;
   title: string;

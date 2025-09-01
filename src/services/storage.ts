@@ -91,6 +91,14 @@ export class StorageService {
         if (!db.objectStoreNames.contains("preferences")) {
           db.createObjectStore("preferences", { keyPath: "id" });
         }
+
+        // Media store for storing images/videos locally
+        if (!db.objectStoreNames.contains("media")) {
+          const mediaStore = db.createObjectStore("media", { keyPath: "id" });
+          mediaStore.createIndex("filename", "filename", { unique: false });
+          mediaStore.createIndex("mimeType", "mimeType", { unique: false });
+          mediaStore.createIndex("created_at", "created_at", { unique: false });
+        }
       };
     });
   }
@@ -367,6 +375,7 @@ export class StorageService {
       "plans",
       "glossary",
       "preferences",
+      "media",
     ];
 
     const exportData: Record<string, unknown[]> = {};
