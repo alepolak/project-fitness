@@ -1,10 +1,11 @@
-// Core App Settings
-export interface AppSettings {
-  unit_system: "imperial" | "metric";
-  theme: "system" | "light" | "dark";
-  privacy_acknowledged: boolean;
-  data_version: number;
-}
+// Re-export all domain-specific types
+export * from "./settings";
+export * from "./metrics";
+export * from "./exercise";
+export * from "./plan";
+export * from "./log";
+export * from "./baseline";
+export * from "./glossary";
 
 // Navigation Types
 export interface NavItem {
@@ -17,7 +18,9 @@ export interface NavItem {
 // Storage Types
 export interface StorageData {
   id: string;
-  timestamp: number;
+  timestamp?: number;
+  created_at: string;
+  updated_at: string;
   version: number;
 }
 
@@ -26,30 +29,16 @@ export interface AppError {
   code: string;
   message: string;
   details?: Record<string, unknown>;
+  timestamp: string;
+  severity: "low" | "medium" | "high" | "critical";
 }
 
-// Exercise and Fitness Types (basic structure for future use)
-export interface Exercise {
-  id: string;
-  name: string;
-  category: string;
-  instructions?: string;
-  equipment?: string[];
-}
-
-export interface WorkoutEntry extends StorageData {
-  exercise_id: string;
-  sets: Set[];
-  notes?: string;
-  date: string;
-}
-
-export interface Set {
-  weight?: number;
-  reps?: number;
-  duration?: number; // in seconds
-  distance?: number; // in meters
-  rest?: number; // in seconds
+// API Response Types
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: AppError;
+  timestamp: string;
 }
 
 // Component Props Types
@@ -63,3 +52,23 @@ export interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: React.ComponentType<{ error: Error; resetError: () => void }>;
 }
+
+// Data operation types
+export type QueryFilter<T> = {
+  [K in keyof T]?: T[K] | T[K][] | { min?: T[K]; max?: T[K] };
+};
+
+export interface SortOptions<T> {
+  field: keyof T;
+  direction: "asc" | "desc";
+}
+
+export interface PaginationOptions {
+  page: number;
+  limit: number;
+}
+
+// Utility types for data operations
+export type CreateData<T> = Omit<T, "id" | "created_at" | "updated_at" | "version">;
+export type UpdateData<T> = Partial<Omit<T, "id" | "created_at" | "version">> & { id: string };
+export type EntityWithMetadata<T> = T & StorageData;
