@@ -74,4 +74,44 @@ export interface CardioStandard {
   }>;
   gender: "male" | "female";
   unit: string;
+  description: string;
+}
+
+export interface FitnessLevel {
+  category: "strength" | "cardio" | "overall";
+  level: "untrained" | "novice" | "intermediate" | "advanced" | "elite";
+  percentile: number;
+  next_level_target?: number;
+  progress_to_next: number; // 0-100 percentage
+}
+
+export interface ImprovementStats {
+  improvement: number;
+  improvementPercent: number;
+  startValue: number;
+  endValue: number;
+  unit?: string;
+  period: string;
+  trend: "improving" | "declining" | "stable";
+}
+
+export interface TestReminder {
+  testType: string;
+  testName: string;
+  dueDate: string;
+  overdue: boolean;
+  importance: "high" | "medium" | "low";
+  estimatedDuration: string;
+}
+
+export interface BaselineTestInstructions {
+  testType: string;
+  title: string;
+  description: string;
+  equipment: string[];
+  duration: string;
+  preparation: string[];
+  steps: string[];
+  safety_notes: string[];
+  measurement_tips: string[];
 }

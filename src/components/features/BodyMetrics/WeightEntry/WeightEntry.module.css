@@ -1,0 +1,280 @@
+/* Weight Entry Form Styles */
+/* Following cursor rules for CSS modules and mobile-first design */
+
+.weightEntryCard {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.titleIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--primary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+/* Form Sections */
+.basicSection,
+.advancedSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-4);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.labelIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: var(--spacing-1);
+  color: var(--muted-foreground);
+}
+
+.quickFillButton {
+  height: auto;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+/* Weight Input Group */
+.weightInputGroup {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.weightInputGroup input {
+  flex: 1;
+}
+
+.unitSelector {
+  min-width: 80px;
+}
+
+/* Advanced Toggle */
+.advancedToggle {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-2) 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 0.875rem;
+  color: var(--primary);
+}
+
+.toggleIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Advanced Section */
+.advancedSection {
+  padding: var(--spacing-4);
+  background: var(--muted);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* Notes Section */
+.notesSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.notesTextarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.characterCount {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  text-align: right;
+}
+
+/* Action Buttons */
+.actionButtons {
+  display: flex;
+  gap: var(--spacing-3);
+  justify-content: flex-end;
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--border);
+}
+
+.cancelButton {
+  min-width: 100px;
+}
+
+.saveButton {
+  min-width: 120px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.saveButton:hover {
+  background: var(--primary)/90;
+}
+
+/* Error States */
+.inputError {
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 1px var(--destructive);
+}
+
+.errorText {
+  font-size: 0.75rem;
+  color: var(--destructive);
+  margin-top: var(--spacing-1);
+}
+
+/* Responsive Design - Tablet and up */
+@media (min-width: 768px) {
+  .formRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .weightInputGroup {
+    max-width: 250px;
+  }
+
+  .actionButtons {
+    justify-content: flex-end;
+  }
+}
+
+/* Responsive Design - Desktop */
+@media (min-width: 1024px) {
+  .weightEntryCard {
+    max-width: 600px;
+  }
+
+  .form {
+    gap: var(--spacing-8);
+  }
+
+  .formRow {
+    gap: var(--spacing-6);
+  }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .advancedSection {
+    background: var(--muted);
+  }
+
+  .quickFillButton:hover {
+    background: var(--accent);
+  }
+
+  .toggleButton:hover {
+    background: var(--accent);
+  }
+}
+
+/* Focus States */
+.form input:focus,
+.form textarea:focus,
+.form select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-color: var(--primary);
+}
+
+/* Disabled States */
+.actionButtons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading States */
+.saveButton:disabled {
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+/* Hover Effects */
+.quickFillButton:hover {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.toggleButton:hover {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Animation for Advanced Section */
+.advancedSection {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Touch Targets - Mobile */
+@media (max-width: 767px) {
+  .quickFillButton,
+  .toggleButton {
+    min-height: 44px;
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+
+  .actionButtons button {
+    min-height: 48px;
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+}

@@ -8,6 +8,9 @@ import addFormats from "ajv-formats";
 import type {
   AppSettings,
   BodyMetricEntry,
+  BodyMeasurement,
+  FitnessGoal,
+  ProgressPhoto,
   ExerciseCatalogItem,
   WorkoutLogEntry,
   PerformedSet,
@@ -62,6 +65,12 @@ export const bodyMetricEntrySchema: JSONSchemaType<BodyMetricEntry> = {
     weight_unit: { type: "string", enum: ["lb", "kg"] },
     body_fat_percent: { type: "number", nullable: true, minimum: 0, maximum: 100 },
     body_muscle_percent: { type: "number", nullable: true, minimum: 0, maximum: 100 },
+    hydration_percent: { type: "number", nullable: true, minimum: 0, maximum: 100 },
+    bone_mass: { type: "number", nullable: true, minimum: 0 },
+    visceral_fat_rating: { type: "number", nullable: true, minimum: 1, maximum: 59 },
+    metabolic_age: { type: "number", nullable: true, minimum: 10, maximum: 120 },
+    measurement_device: { type: "string", nullable: true, maxLength: 100 },
+    measurement_time: { type: "string", nullable: true, pattern: "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" },
     notes: { type: "string", nullable: true, maxLength: 1000 },
   },
   required: [
@@ -397,9 +406,105 @@ export const glossaryItemSchema: JSONSchemaType<GlossaryItem> = {
   additionalProperties: false,
 };
 
+// Body Measurement Schema
+export const bodyMeasurementSchema: JSONSchemaType<BodyMeasurement> = {
+  type: "object",
+  properties: {
+    ...baseEntityProps,
+    date: { type: "string", format: "date" },
+    measurements: {
+      type: "object",
+      properties: {
+        chest: { type: "number", nullable: true, minimum: 0 },
+        waist: { type: "number", nullable: true, minimum: 0 },
+        hips: { type: "number", nullable: true, minimum: 0 },
+        bicep_left: { type: "number", nullable: true, minimum: 0 },
+        bicep_right: { type: "number", nullable: true, minimum: 0 },
+        thigh_left: { type: "number", nullable: true, minimum: 0 },
+        thigh_right: { type: "number", nullable: true, minimum: 0 },
+        neck: { type: "number", nullable: true, minimum: 0 },
+        forearm_left: { type: "number", nullable: true, minimum: 0 },
+        forearm_right: { type: "number", nullable: true, minimum: 0 },
+        calf_left: { type: "number", nullable: true, minimum: 0 },
+        calf_right: { type: "number", nullable: true, minimum: 0 },
+      },
+      additionalProperties: false,
+    },
+    measurement_unit: { type: "string", enum: ["in", "cm"] },
+    measurement_technique: { type: "string", nullable: true, maxLength: 200 },
+    notes: { type: "string", nullable: true, maxLength: 500 },
+    progress_photo_ids: { 
+      type: "array", 
+      items: { type: "string" }, 
+      nullable: true 
+    },
+  },
+  required: ["id", "date", "measurements", "measurement_unit", "created_at", "updated_at", "version"],
+  additionalProperties: false,
+};
+
+// Fitness Goal Schema
+export const fitnessGoalSchema: JSONSchemaType<FitnessGoal> = {
+  type: "object",
+  properties: {
+    ...baseEntityProps,
+    title: { type: "string", minLength: 1, maxLength: 100 },
+    description: { type: "string", nullable: true, maxLength: 500 },
+    category: { 
+      type: "string", 
+      enum: ["weight", "strength", "cardio", "body_composition", "custom"] 
+    },
+    goal_type: { 
+      type: "string", 
+      enum: ["target_value", "increase_by", "decrease_by", "maintain"] 
+    },
+    target_value: { type: "number", nullable: true, minimum: 0 },
+    target_unit: { type: "string", nullable: true, maxLength: 20 },
+    current_value: { type: "number", nullable: true, minimum: 0 },
+    start_date: { type: "string", format: "date" },
+    target_date: { type: "string", format: "date" },
+    metric_to_track: { type: "string", minLength: 1, maxLength: 50 },
+    measurement_frequency: { 
+      type: "string", 
+      enum: ["daily", "weekly", "monthly"] 
+    },
+    status: { 
+      type: "string", 
+      enum: ["active", "completed", "paused", "abandoned"] 
+    },
+    completion_percentage: { type: "number", minimum: 0, maximum: 100 },
+    why_important: { type: "string", nullable: true, maxLength: 300 },
+    reward_for_completion: { type: "string", nullable: true, maxLength: 200 },
+  },
+  required: [
+    "id", "title", "category", "goal_type", "start_date", "target_date", 
+    "metric_to_track", "measurement_frequency", "status", "completion_percentage",
+    "created_at", "updated_at", "version"
+  ],
+  additionalProperties: false,
+};
+
+// Progress Photo Schema
+export const progressPhotoSchema: JSONSchemaType<ProgressPhoto> = {
+  type: "object",
+  properties: {
+    ...baseEntityProps,
+    date: { type: "string", format: "date" },
+    photo_data: { type: "string", minLength: 1 }, // Base64 encoded
+    photo_type: { type: "string", enum: ["front", "side", "back", "custom"] },
+    notes: { type: "string", nullable: true, maxLength: 300 },
+    measurements_id: { type: "string", nullable: true },
+  },
+  required: ["id", "date", "photo_data", "photo_type", "created_at", "updated_at", "version"],
+  additionalProperties: false,
+};
+
 // Compile validators
 export const validateAppSettings = ajv.compile(appSettingsSchema);
 export const validateBodyMetricEntry = ajv.compile(bodyMetricEntrySchema);
+export const validateBodyMeasurement = ajv.compile(bodyMeasurementSchema);
+export const validateGoal = ajv.compile(fitnessGoalSchema);
+export const validateProgressPhoto = ajv.compile(progressPhotoSchema);
 export const validateExercise = ajv.compile(exerciseSchema);
 export const validateWorkoutLog = ajv.compile(workoutLogSchema);
 export const validateBaselineTest = ajv.compile(baselineTestSchema);

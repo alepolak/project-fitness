@@ -161,6 +161,8 @@ export class BaselineRepository extends BaseRepository<BaselineTestEntry> {
     startValue: number;
     endValue: number;
     unit?: string;
+    period: string;
+    trend: "improving" | "declining" | "stable";
   } | null> {
     const cutoffDate = DateUtils.getMonthKey(
       DateUtils.addDays(DateUtils.getCurrentDate(), -months * 30)
@@ -219,12 +221,24 @@ export class BaselineRepository extends BaseRepository<BaselineTestEntry> {
     const improvement = endValue - startValue;
     const improvementPercent = (improvement / startValue) * 100;
 
+    // Determine trend
+    let trend: "improving" | "declining" | "stable";
+    if (Math.abs(improvementPercent) < 1) {
+      trend = "stable";
+    } else if (improvementPercent > 0) {
+      trend = "improving";
+    } else {
+      trend = "declining";
+    }
+
     return {
       improvement: Math.round(improvement * 100) / 100,
       improvementPercent: Math.round(improvementPercent * 100) / 100,
       startValue,
       endValue,
       unit,
+      period: `${months} months`,
+      trend,
     };
   }
 

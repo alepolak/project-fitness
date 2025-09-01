@@ -6,6 +6,9 @@
 import {
   validateAppSettings,
   validateBodyMetricEntry,
+  validateBodyMeasurement,
+  validateGoal,
+  validateProgressPhoto,
   validateExercise,
   validateWorkoutLog,
   validateBaselineTest,
@@ -14,6 +17,9 @@ import {
 import type {
   AppSettings,
   BodyMetricEntry,
+  BodyMeasurement,
+  FitnessGoal,
+  ProgressPhoto,
   ExerciseCatalogItem,
   WorkoutLogEntry,
   BaselineTestEntry,
@@ -44,6 +50,45 @@ export class ValidationService {
       "INVALID_BODY_METRIC",
       "Invalid body metric entry format",
       validateBodyMetricEntry.errors || []
+    );
+  }
+
+  // Validate body measurement
+  static validateBodyMeasurement(data: unknown): BodyMeasurement {
+    if (validateBodyMeasurement(data)) {
+      return data;
+    }
+    
+    throw this.createValidationError(
+      "INVALID_BODY_MEASUREMENT",
+      "Invalid body measurement format",
+      validateBodyMeasurement.errors || []
+    );
+  }
+
+  // Validate fitness goal
+  static validateGoal(data: unknown): FitnessGoal {
+    if (validateGoal(data)) {
+      return data;
+    }
+    
+    throw this.createValidationError(
+      "INVALID_GOAL",
+      "Invalid fitness goal format",
+      validateGoal.errors || []
+    );
+  }
+
+  // Validate progress photo
+  static validateProgressPhoto(data: unknown): ProgressPhoto {
+    if (validateProgressPhoto(data)) {
+      return data;
+    }
+    
+    throw this.createValidationError(
+      "INVALID_PROGRESS_PHOTO",
+      "Invalid progress photo format",
+      validateProgressPhoto.errors || []
     );
   }
 
@@ -301,6 +346,9 @@ export class ValidationService {
 export {
   validateAppSettings,
   validateBodyMetricEntry,
+  validateBodyMeasurement,
+  validateGoal,
+  validateProgressPhoto,
   validateExercise,
   validateWorkoutLog,
   validateBaselineTest,
