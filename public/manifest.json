@@ -1,0 +1,47 @@
+{
+  "name": "Fitness Tracker",
+  "short_name": "FitnessTracker",
+  "description": "A comprehensive fitness tracking app for workouts, planning, and progress monitoring",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "categories": ["health", "fitness", "lifestyle"],
+  "icons": [
+    {
+      "src": "/next.svg",
+      "sizes": "180x38",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Log Workout",
+      "short_name": "Log",
+      "description": "Quickly log a new workout",
+      "url": "/log",
+      "icons": [
+        {
+          "src": "/next.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "View Plan",
+      "short_name": "Plan",
+      "description": "View your workout plan",
+      "url": "/plan",
+      "icons": [
+        {
+          "src": "/next.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
