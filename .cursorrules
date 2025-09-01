@@ -1,0 +1,313 @@
+# Fitness Log App - Cursor Rules
+
+## Project Overview
+- Next.js mobile-first responsive fitness tracking app (local-only, no cloud)
+- TypeScript strict mode + React 18 + shadcn/ui components
+- IndexedDB for data storage, Local Storage for preferences
+- Clear beginner-friendly interface with no fitness jargon
+- JSON validation with Ajv for all data operations
+
+## 1. TypeScript & React Best Practices
+
+### TypeScript Guidelines
+- Use `"strict": true` in tsconfig.json - enforce all strict type checking
+- Always define explicit types for props, state, and function parameters
+- Use of `any` is prohibited
+- Use `interface` for object shapes, `type` for unions/intersections
+- Prefer type-safe approaches: `as const` assertions, proper generics
+- Define strict schemas that match Ajv validation schemas
+
+```typescript
+// ✅ Good: Explicit types with validation alignment
+interface WorkoutLogEntry {
+  id: string;
+  date_time_start: string; // ISO string
+  session_plan_ref?: string;
+  entries: ExerciseEntry[];
+  session_notes?: string;
+  created_at: string;
+  updated_at: string;
+  version: number;
+}
+
+// ✅ Good: Discriminated unions for different exercise types
+type ExerciseEntry = StrengthEntry | CardioEntry;
+
+interface StrengthEntry {
+  type: 'strength';
+  exercise_id: string;
+  performed_sets: PerformedSet[];
+}
+```
+
+### React Component Guidelines
+- All components must start with `"use client"` directive
+- Use functional components with hooks exclusively
+- Prefer composition over inheritance - build with smaller, focused components
+- Use React.memo() for expensive components that re-render frequently
+- Always handle loading, error, and empty states explicitly
+- Use custom hooks for complex state logic and side effects
+
+```typescript
+// ✅ Good: Client component with proper typing
+"use client";
+
+interface ExerciseCardProps {
+  exercise: ExerciseCatalogItem;
+  prescription: ExercisePrescription;
+  onComplete: (sets: PerformedSet[]) => void;
+  isActive: boolean;
+}
+
+export const ExerciseCard = React.memo<ExerciseCardProps>(({ 
+  exercise, 
+  prescription, 
+  onComplete, 
+  isActive 
+}) => {
+  // Component implementation
+});
+```
+
+### State Management Rules
+- Use useState for local component state
+- Create custom hooks for shared stateful logic (useLocalStorage, useIndexedDB)
+- Keep state as close to where it's used as possible
+- Use React Context sparingly - only for truly global state (theme, units, user data)
+
+## 2. Styling Guidelines
+
+### CSS Modules for Custom Components
+- Use CSS Modules (`.module.css`) for all custom component styling
+- Name classes using camelCase to match JavaScript conventions
+- Scope styles tightly to avoid conflicts with shadcn components
+- Use CSS custom properties for theme-aware values
+- `margin` is only allowed to be `0` or `auto`
+- `!important` is prohibited
+- Styles should follow a responsive approach, mobile first
+
+```css
+/* ExerciseCard.module.css */
+.exerciseCard {
+  padding: var(--spacing-4);
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.exerciseTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.safetyNote {
+  padding: var(--spacing-2);
+  background: var(--destructive-foreground);
+  border-left: 3px solid var(--destructive);
+  font-size: 0.875rem;
+}
+```
+
+### Tailwind with shadcn/ui
+- Use Tailwind classes ONLY within shadcn/ui components
+- Never mix Tailwind classes in custom components - use CSS modules instead
+- Follow shadcn component customization patterns using `cn()` utility
+- Maintain design system consistency through CSS custom properties
+
+```typescript
+// ✅ Good: Tailwind only in shadcn component customization
+import { cn } from "@/lib/utils";
+
+<Button 
+  className={cn(
+    "w-full h-12", // Tailwind for shadcn component
+    "font-medium", // Standard shadcn extensions
+    variant === "danger" && "bg-destructive hover:bg-destructive/90"
+  )}
+>
+  Start Workout
+</Button>
+
+// ✅ Good: CSS modules for custom components
+<div className={styles.exerciseCard}>
+  <h3 className={styles.exerciseTitle}>{exercise.name}</h3>
+</div>
+```
+
+## 3. Architecture & Code Reuse
+
+### Component Organization
+- Try to use shadcn components if they exist first.
+- If a shadcn component doesn't exist, create atomic components: Button variants, Input wrappers, Card types
+- Build composite components: ExerciseCard, WorkoutSession, MetricEntry
+- Use data-attributes props or compound components for flexible, reusable patterns
+- Extract common logic into custom hooks, not higher-order components
+
+```typescript
+// ✅ Good: Reusable patterns without overengineering
+export const MetricCard = ({ title, value, unit, onEdit, children }) => (
+  <Card className={styles.metricCard}>
+    <CardHeader>
+      <CardTitle>{title}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className={styles.metricValue}>
+        {value} <span className={styles.unit}>{unit}</span>
+      </div>
+      {children}
+    </CardContent>
+    {onEdit && (
+      <CardFooter>
+        <Button variant="ghost" onClick={onEdit}>Edit</Button>
+      </CardFooter>
+    )}
+  </Card>
+);
+```
+
+### Data Layer Patterns
+- Create service modules for IndexedDB operations: `services/storage.ts` serves ALL loading/saving data
+- Use repository pattern for data access: `repositories/workoutRepository.ts`
+- Implement validation layer: `validators/schemas.ts` with Ajv
+- Create transformation utilities: `utils/units.ts`, `utils/formatting.ts`
+
+```typescript
+// ✅ Good: Repository pattern for data access
+export class WorkoutRepository {
+  async saveWorkout(workout: WorkoutLogEntry): Promise<void> {
+    await validateWorkout(workout); // Ajv validation
+    await storageService.save('logs', workout);
+  }
+
+  async getWorkoutsByExercise(exerciseId: string): Promise<WorkoutLogEntry[]> {
+    return storageService.query('logs', { exercise_id: exerciseId });
+  }
+}
+```
+
+### Hook Patterns
+- Only create custom hooks when needed
+- Extract common patterns: `useLocalStorage`, `useAsyncOperation`
+- Keep hooks focused on single responsibilities
+- Use dependency injection pattern for services in hooks
+
+```typescript
+// ✅ Good: Focused custom hook
+export const useWorkoutSession = (sessionId?: string) => {
+  const [session, setSession] = useState<WorkoutSession | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const startWorkout = useCallback(async (sessionPlan: SessionPlan) => {
+    // Implementation
+  }, []);
+
+  const completeExercise = useCallback(async (exerciseId: string, sets: PerformedSet[]) => {
+    // Implementation
+  }, []);
+
+  return { session, isLoading, error, startWorkout, completeExercise };
+};
+```
+
+## 4. Next.js Client-Side Guidelines
+
+### File Organization
+```
+src/
+├── app/                    # App Router pages (all client components)
+│   ├── (dashboard)/       # Route groups for navigation
+│   │   ├── home/
+│   │   ├── plan/
+│   │   ├── log/
+│   │   └── baseline/
+│   ├── settings/
+│   └── layout.tsx
+├── components/
+│   ├── ui/                           # shadcn/ui components 
+│   │   └── Page/                     # component folder
+│   │         ├── Page.tsx            # component file
+│   │         ├── Page.module.css     # component style
+│   │         └── Page.test.ts        # component tests
+│   ├── common/                       # Reusable custom components
+│   └── features/                     # Feature-specific components
+├── hooks/                            # Custom React hooks
+├── services/                         # Data layer services
+├── lib/                              # Utilities and configurations
+└── types/                            # TypeScript type definitions
+```
+
+### Client Component Rules
+- Every page and component starts with `"use client"`
+- Use dynamic imports with Suspense for code splitting large features
+- Implement proper error boundaries for each major feature area
+- Use Next.js Image component for optimized exercise photos/gifs
+- Handle client-side routing with Next.js navigation hooks
+
+```typescript
+// ✅ Good: Client-side page structure
+"use client";
+
+import { Suspense } from "react";
+import { WorkoutPlanCalendar } from "@/components/features/WorkoutPlanCalendar";
+import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
+
+export default function PlanPage() {
+  return (
+    <div className={styles.planPage}>
+      <Suspense fallback={<LoadingSkeleton />}>
+        <WorkoutPlanCalendar />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+### Local Storage Integration
+- Implement graceful fallbacks for when localStorage is unavailable
+- Use type-safe interfaces for stored preferences
+- Handle storage quota exceeded scenarios gracefully
+
+```typescript
+// ✅ Good: Type-safe localStorage hook
+export const useLocalStorageState = <T>(
+  key: string, 
+  defaultValue: T,
+  serializer = JSON
+) => {
+  const [value, setValue] = useState<T>(() => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? serializer.parse(item) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  });
+
+  const setStoredValue = useCallback((newValue: T | ((prev: T) => T)) => {
+    try {
+      const valueToStore = newValue instanceof Function ? newValue(value) : newValue;
+      setValue(valueToStore);
+      localStorage.setItem(key, serializer.stringify(valueToStore));
+    } catch (error) {
+      console.warn(`Error setting localStorage key "${key}":`, error);
+    }
+  }, [key, value, serializer]);
+
+  return [value, setStoredValue] as const;
+};
+```
+
+## Additional Guidelines
+
+### Accessibility
+- Maintain minimum 44px touch targets for mobile
+- Use semantic HTML elements within custom components
+
+### Testing Strategy
+- Write unit tests for utility functions and custom hooks
+- Use React Testing Library for component testing
+- Mock IndexedDB operations for consistent testing
+- Test error scenarios and edge cases thoroughly
