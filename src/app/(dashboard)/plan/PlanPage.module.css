@@ -1,0 +1,616 @@
+/* Plan Page Styles */
+
+.planPage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  padding: var(--spacing-4);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.titleSection h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.subtitle {
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  white-space: nowrap;
+}
+
+.buttonIcon {
+  height: 1rem;
+  width: 1rem;
+}
+
+/* Search Section */
+.searchSection {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+}
+
+.searchInput {
+  position: relative;
+  flex: 1;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1rem;
+  width: 1rem;
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+.searchField {
+  padding-left: var(--spacing-10);
+}
+
+.filterSelect {
+  min-width: 150px;
+}
+
+.filterIcon {
+  height: 1rem;
+  width: 1rem;
+  margin-right: var(--spacing-2);
+}
+
+/* Plans Section */
+.plansSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionHeader h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.planGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-4);
+}
+
+/* Plan Card */
+.planCard {
+  border: 1px solid var(--border);
+  background: var(--card);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.planCard:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.planCardHeader {
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-3) var(--spacing-4);
+}
+
+.planCardTitle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-2);
+}
+
+.planTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.planMenuButton {
+  padding: var(--spacing-1);
+  height: auto;
+  width: auto;
+}
+
+.planDescription {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin: 0 0 var(--spacing-3) 0;
+  line-height: 1.4;
+}
+
+.planMeta {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.planDuration,
+.planSessions {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.planCardContent {
+  padding: 0 var(--spacing-4) var(--spacing-4) var(--spacing-4);
+}
+
+.planActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.startButton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.planSecondaryActions {
+  display: flex;
+  gap: var(--spacing-1);
+}
+
+/* Empty State */
+.emptyCard {
+  border: 1px dashed var(--border);
+  background: var(--muted-background);
+}
+
+.emptyContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8);
+  text-align: center;
+}
+
+.emptyIcon {
+  height: 3rem;
+  width: 3rem;
+  color: var(--muted-foreground);
+  margin-bottom: var(--spacing-4);
+}
+
+.emptyTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.emptyText {
+  color: var(--muted-foreground);
+  margin: 0 0 var(--spacing-4) 0;
+}
+
+.emptyButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+/* Templates Section */
+.templatesSection {
+  margin-top: var(--spacing-4);
+}
+
+.templatesCard {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.templatesTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 1.125rem;
+  color: var(--primary);
+  margin: 0;
+}
+
+.titleIcon {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.templatesContent {
+  padding: var(--spacing-4);
+}
+
+.templatesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.templateItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+}
+
+.templateInfo {
+  flex: 1;
+  margin-right: var(--spacing-3);
+}
+
+.templateName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0 0 var(--spacing-1) 0;
+}
+
+.templateDescription {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin: 0 0 var(--spacing-2) 0;
+  line-height: 1.3;
+}
+
+.templateMeta {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.templateDuration {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.useTemplateButton {
+  white-space: nowrap;
+}
+
+.noTemplates {
+  text-align: center;
+  color: var(--muted-foreground);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Loading States */
+.loadingPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  gap: var(--spacing-4);
+}
+
+.loadingIcon {
+  height: 2rem;
+  width: 2rem;
+  color: var(--primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loadingTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.loadingText {
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+/* Sheet Content */
+.sheetContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  padding: var(--spacing-6);
+}
+
+.createForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.formField label {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.submitButton {
+  width: 100%;
+}
+
+/* Plan Detail Sheet */
+.planDetailSheet {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.planDetailTitle {
+  font-size: 1.25rem;
+  color: var(--primary);
+  margin: 0;
+}
+
+.planDetailContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  padding: var(--spacing-4) 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.planOverview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.planStats {
+  display: flex;
+  gap: var(--spacing-6);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.planDetailDescription {
+  color: var(--muted-foreground);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.phasesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.phaseCard {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.phaseTitle {
+  font-size: 1rem;
+  color: var(--primary);
+  margin: 0;
+}
+
+.phaseDescription {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.weeksList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.weekItem {
+  padding: var(--spacing-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--muted-background);
+}
+
+.weekTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0 0 var(--spacing-3) 0;
+}
+
+.deloadBadge {
+  font-size: 0.625rem;
+  padding: var(--spacing-1) var(--spacing-2);
+}
+
+.daysList {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-2);
+}
+
+.dayItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-2);
+  border-radius: var(--radius);
+  background: var(--background);
+  min-height: 60px;
+}
+
+.dayName {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+.restDay {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+
+.sessionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  align-items: center;
+}
+
+.sessionBadge {
+  font-size: 0.625rem;
+  padding: var(--spacing-1);
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .planPage {
+    padding: var(--spacing-3);
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .headerActions {
+    align-self: stretch;
+  }
+
+  .createButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .searchSection {
+    flex-direction: column;
+  }
+
+  .filterSelect {
+    min-width: auto;
+  }
+
+  .planGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .templateItem {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-3);
+  }
+
+  .templateInfo {
+    margin-right: 0;
+  }
+
+  .useTemplateButton {
+    width: 100%;
+  }
+
+  .planActions {
+    flex-direction: column;
+  }
+
+  .planSecondaryActions {
+    justify-content: center;
+  }
+
+  .planStats {
+    justify-content: center;
+  }
+
+  .daysList {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-1);
+  }
+
+  .dayItem {
+    min-height: 50px;
+    padding: var(--spacing-1);
+  }
+
+  .sessionBadge {
+    font-size: 0.5rem;
+  }
+}

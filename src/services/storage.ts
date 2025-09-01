@@ -99,6 +99,22 @@ export class StorageService {
           mediaStore.createIndex("mimeType", "mimeType", { unique: false });
           mediaStore.createIndex("created_at", "created_at", { unique: false });
         }
+
+        if (!db.objectStoreNames.contains("plans")) {
+          const plansStore = db.createObjectStore("plans", { keyPath: "id" });
+          plansStore.createIndex("title", "title", { unique: false });
+          plansStore.createIndex("difficulty_level", "difficulty_level", { unique: false });
+          plansStore.createIndex("is_template", "is_template", { unique: false });
+          plansStore.createIndex("created_at", "created_at", { unique: false });
+          plansStore.createIndex("updated_at", "updated_at", { unique: false });
+        }
+
+        if (!db.objectStoreNames.contains("completed_sessions")) {
+          const completedStore = db.createObjectStore("completed_sessions", { keyPath: "id" });
+          completedStore.createIndex("session_id", "session_id", { unique: false });
+          completedStore.createIndex("plan_id", "plan_id", { unique: false });
+          completedStore.createIndex("completion_date", "completion_date", { unique: false });
+        }
       };
     });
   }
@@ -376,6 +392,7 @@ export class StorageService {
       "glossary",
       "preferences",
       "media",
+      "completed_sessions",
     ];
 
     const exportData: Record<string, unknown[]> = {};

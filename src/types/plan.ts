@@ -88,3 +88,76 @@ export interface CardioInterval {
   target_incline_percent?: number;
   notes?: string;
 }
+
+// Additional types for plan management and editing
+
+export interface SessionPath {
+  phaseIndex: number;
+  weekIndex: number;
+  dayIndex: number;
+  sessionIndex: number;
+}
+
+export interface PlanSearchFilters {
+  query?: string;
+  difficulty_level?: "beginner" | "intermediate" | "advanced";
+  duration_weeks?: { min?: number; max?: number };
+  session_types?: string[];
+  tags?: string[];
+  is_template?: boolean;
+}
+
+export interface PlanTemplate {
+  id: string;
+  title: string;
+  description: string;
+  difficulty_level: "beginner" | "intermediate" | "advanced";
+  duration_weeks: number;
+  session_types: string[];
+  tags: string[];
+  preview_sessions: number;
+  plan: ProgramPlan;
+}
+
+export interface CompletedSession {
+  id: string;
+  session_id: string;
+  completion_date: string; // ISO string
+  session_path: SessionPath;
+  plan_id: string;
+  actual_duration_minutes?: number;
+  completion_notes?: string;
+  created_at: string;
+  updated_at: string;
+  version: number;
+}
+
+export interface PlanProgress {
+  plan_id: string;
+  current_phase_index: number;
+  current_week_index: number;
+  completed_sessions: Set<string>; // session IDs
+  total_sessions: number;
+  completed_count: number;
+  completion_percentage: number;
+  estimated_completion_date?: string;
+  last_session_date?: string;
+}
+
+export interface ExerciseSelectionFilters {
+  movement_patterns?: string[];
+  equipment?: string[];
+  primary_muscles?: string[];
+  difficulty_level?: "beginner" | "intermediate" | "advanced";
+  exercise_type?: "strength" | "cardio" | "flexibility" | "balance";
+}
+
+export interface PlanStats {
+  total_sessions: number;
+  sessions_by_type: Record<string, number>;
+  total_exercises: number;
+  unique_exercises: number;
+  estimated_total_duration_minutes: number;
+  phases_count: number;
+  weeks_per_phase: number[];
+}

@@ -1,0 +1,1 @@
+export { ExercisePrescriptionEditor } from "./ExercisePrescriptionEditor";

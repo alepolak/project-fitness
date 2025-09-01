@@ -3,13 +3,14 @@
  * Following cursor rules for error handling and type safety
  */
 
-import { exerciseRepository, settingsRepository } from "@/repositories";
+import { exerciseRepository, settingsRepository, planRepository } from "@/repositories";
 import { storageService } from "./storage";
 import { ValidationService } from "@/validators";
 import { starterExercises } from "@/data/starterExercises";
 import { starterGlossary } from "@/data/starterGlossary";
+import { starterPlanTemplates } from "@/data/planTemplates";
 import { DateUtils } from "@/utils/dateUtils";
-import type { ExerciseCatalogItem, GlossaryItem } from "@/types";
+import type { ExerciseCatalogItem, GlossaryItem, ProgramPlan } from "@/types";
 
 export class DataInitService {
   /**
@@ -18,26 +19,32 @@ export class DataInitService {
   static async initializeAppData(): Promise<{
     exercisesAdded: number;
     glossaryAdded: number;
+    planTemplatesAdded: number;
     alreadyInitialized: boolean;
   }> {
     try {
       // Check if we've already initialized
       const existingExercises = await exerciseRepository.count();
       const existingGlossary = await storageService.count("glossary");
+      const existingPlans = await planRepository.count();
 
-      if (existingExercises > 0 || existingGlossary > 0) {
+      if (existingExercises > 0 || existingGlossary > 0 || existingPlans > 0) {
         return {
           exercisesAdded: 0,
           glossaryAdded: 0,
+          planTemplatesAdded: 0,
           alreadyInitialized: true,
         };
       }
 
-      // Initialize exercises
+      // Initialize exercises first (plans reference them)
       const exercisesAdded = await this.initializeExercises();
       
       // Initialize glossary
       const glossaryAdded = await this.initializeGlossary();
+
+      // Initialize plan templates
+      const planTemplatesAdded = await this.initializePlanTemplates();
 
       // Initialize settings if needed
       await this.initializeSettings();
@@ -45,6 +52,7 @@ export class DataInitService {
       return {
         exercisesAdded,
         glossaryAdded,
+        planTemplatesAdded,
         alreadyInitialized: false,
       };
     } catch (error) {
@@ -107,6 +115,35 @@ export class DataInitService {
         addedCount++;
       } catch (error) {
         console.error(`Failed to add glossary term ${glossaryData.term}:`, error);
+      }
+    }
+
+    return addedCount;
+  }
+
+  /**
+   * Initialize starter plan templates
+   */
+  private static async initializePlanTemplates(): Promise<number> {
+    let addedCount = 0;
+    const now = DateUtils.getCurrentDateTime();
+
+    for (const templateData of starterPlanTemplates) {
+      try {
+        const template: ProgramPlan = {
+          ...templateData,
+          id: crypto.randomUUID(),
+          created_at: now,
+          updated_at: now,
+          version: 1,
+        };
+
+        // TODO: Add plan validation
+        
+        await planRepository.save(template);
+        addedCount++;
+      } catch (error) {
+        console.error(`Failed to add plan template ${templateData.title}:`, error);
       }
     }
 

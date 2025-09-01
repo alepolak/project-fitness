@@ -4,7 +4,7 @@
  */
 
 import { storageService } from "./storage";
-import type { ExerciseCatalogItem, GlossaryItem, MediaItem } from "@/types";
+import type { ExerciseCatalogItem, GlossaryItem } from "@/types";
 
 export interface MediaBlob {
   id: string;

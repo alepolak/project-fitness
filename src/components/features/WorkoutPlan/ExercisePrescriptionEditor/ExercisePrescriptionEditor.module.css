@@ -1,0 +1,362 @@
+/* Exercise Prescription Editor Styles */
+
+.prescriptionEditor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  max-width: 800px;
+}
+
+/* Header */
+.headerCard {
+  border: 1px solid var(--primary);
+  background: var(--card);
+}
+
+.exerciseTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.exerciseMeta {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+  margin-top: var(--spacing-2);
+}
+
+/* Description */
+.descriptionCard {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.descriptionContent {
+  padding: var(--spacing-4);
+}
+
+.descriptionField {
+  margin-bottom: var(--spacing-4);
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.autoDescription {
+  padding: var(--spacing-3);
+  background: var(--muted-background);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.autoDescriptionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-2);
+}
+
+.useAutoButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: 0.75rem;
+  height: auto;
+  padding: var(--spacing-1) var(--spacing-2);
+}
+
+.autoDescriptionText {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Strength Prescription */
+.strengthCard {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.strengthHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.strengthContent {
+  padding: var(--spacing-4);
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 0.875rem;
+}
+
+/* Set Editor */
+.setEditor {
+  padding: var(--spacing-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--muted-background);
+  margin-bottom: var(--spacing-4);
+}
+
+.setEditor:last-child {
+  margin-bottom: 0;
+}
+
+.setHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3);
+}
+
+.setTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  color: var(--destructive);
+}
+
+.removeButton:hover {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+}
+
+.setFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-4);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.repFields {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.repTypeSelect {
+  min-width: 80px;
+}
+
+.repInput {
+  flex: 1;
+  min-width: 60px;
+}
+
+.rangeInputs {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex: 1;
+}
+
+.rangeInput {
+  flex: 1;
+  min-width: 50px;
+}
+
+.weightInput,
+.restInput,
+.rpeInput,
+.tempoInput {
+  max-width: 120px;
+}
+
+/* Cardio Prescription */
+.cardioCard {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.cardioContent {
+  padding: var(--spacing-4);
+}
+
+.cardioTimings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.intervalsSection {
+  margin-bottom: var(--spacing-6);
+}
+
+.intervalsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-4);
+}
+
+.intervalsTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.intervalEditor {
+  padding: var(--spacing-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  margin-bottom: var(--spacing-3);
+}
+
+.intervalEditor:last-child {
+  margin-bottom: 0;
+}
+
+.intervalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3);
+}
+
+.intervalTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.intervalFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--spacing-3);
+}
+
+/* Form Cues */
+.cuesCard {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.cuesContent {
+  padding: var(--spacing-4);
+}
+
+.cuesField {
+  margin-bottom: var(--spacing-4);
+}
+
+.cuesField:last-child {
+  margin-bottom: 0;
+}
+
+/* Safety */
+.safetyCard {
+  border: 1px solid var(--destructive);
+  background: var(--card);
+}
+
+.safetyTitle {
+  color: var(--destructive);
+  margin: 0;
+}
+
+.safetyList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.safetyNote {
+  padding: var(--spacing-2);
+  background: var(--destructive-foreground);
+  border-left: 3px solid var(--destructive);
+  border-radius: var(--radius);
+  margin-bottom: var(--spacing-2);
+  font-size: 0.875rem;
+  color: var(--foreground);
+}
+
+.safetyNote:last-child {
+  margin-bottom: 0;
+}
+
+/* Common Elements */
+.buttonIcon {
+  height: 1rem;
+  width: 1rem;
+}
+
+.emptyState {
+  padding: var(--spacing-6);
+  text-align: center;
+  color: var(--muted-foreground);
+  font-style: italic;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--muted-background);
+}
+
+.emptyState p {
+  margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .setFields {
+    grid-template-columns: 1fr;
+  }
+
+  .repFields {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rangeInputs {
+    flex-direction: column;
+  }
+
+  .cardioTimings {
+    grid-template-columns: 1fr;
+  }
+
+  .intervalFields {
+    grid-template-columns: 1fr;
+  }
+
+  .strengthHeader,
+  .intervalsHeader,
+  .setHeader,
+  .intervalHeader,
+  .autoDescriptionHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-2);
+  }
+
+  .useAutoButton {
+    align-self: flex-start;
+  }
+}
